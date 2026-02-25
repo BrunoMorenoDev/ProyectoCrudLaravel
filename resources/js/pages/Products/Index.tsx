@@ -1,4 +1,6 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
+
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,6 +14,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import AppLayout from '@/layouts/app-layout';
+import {edit, create, destroy as destroyRoute} from '@/routes/products';
 import type { BreadcrumbItem } from '@/types';
 
 
@@ -48,14 +51,14 @@ export default function Index() {
     const { processing, delete: destroy } = useForm();
     const handleDelete = (id: number, name: string) => {
         if (confirm("Do you want to delete a product" + " " + id + " " + name)) {
-            destroy(`/products/${id}`)
+            destroy(destroyRoute({ id }).url)
         }
     }
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />
             <div className='m-4'>
-                <Link href={"products/create"}><Button>Create Product</Button></Link>
+                <Link href={create()}><Button>Create Product</Button></Link>
             </div>
             <div className='m-4'>
                 {flash.message && (
@@ -90,7 +93,8 @@ export default function Index() {
                                     <TableCell>${product.price}</TableCell>
                                     <TableCell>{product.description}</TableCell>
                                     <TableCell className="text-center">
-                                        <Link href={`/products/${product.id}/edit`}><Button className='mr-2'>Edit</Button></Link>
+                                        {/* <Link href={`/products/${product.id}/edit`}><Button className='mr-2'>Edit</Button></Link>*/}
+                                        {<Link href={edit({id: product.id}).url}><Button className='mr-2'>Edit</Button></Link>}
                                         <Button className='text-white bg-red-500 hover:bg-red-900'
                                            disabled={processing} onClick={() => handleDelete(product.id, product.name)}>Delete</Button>
                                     </TableCell>
